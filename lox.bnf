@@ -1,0 +1,42 @@
+/* https://www.bottlecaps.de/rr/ui */
+
+program ::= ( declaration whitespace* )*
+
+declaration ::= variable_declaration | function_declaration | class_declaration | statement
+variable_declaration ::= "var" whitespace* identifier ( whitespace* "=" whitespace* expression )? whitespace* ";"
+
+function_declaration ::= "fun" whitespace* function
+function ::= identifier whitespace* "(" whitespace* function_parameters? whitespace* ")" whitespace* block
+function_parameters ::= identifier ( whitespace* "," whitespace* identifier )*
+
+statement ::= expression_statement | print_statement | return_statement | if_statement | while_statement | for_statement | block
+expression_statement ::= expression whitespace* ";"
+print_statement ::= "print" whitespace* expression whitespace* ";"
+return_statement ::= "return" whitespace* exression? whitespace* ";"
+if_statement ::= "if" whitespace* "(" whitespace* expression whitespace* ")" whitespace* statement ( whitespace* "else" whitespace* statement )?
+while_statement ::= "while" whitespace* "(" whitespace* expression whitespace* ")" whitespace* statement
+for_statement ::= "for" whitespace* "(" whitespace* ( variable_declaration | expression_statement | ";" ) whitespace* expression? whitespace* ";" whitespace* expression? whitespace* ")" whitespace* statement
+block ::= "{" whitespace* declaration* whitespace* "}"
+
+expression ::= assignment
+
+/* Precedence ordered lowest to highest without left recursion */
+assignment ::= ( identifier whitespace* "=" whitespace* assignment ) | logical_or
+logical_or ::=logical_and ( whitespace* "or" whitespace* logical_and )*
+logical_and ::= equality ( whitespace* "and" whitespace* equality )*
+equality ::= comparison ( whitespace* ( "==" | "!=" ) whitespace* comparison )*
+comparison ::= term ( whitespace* ( "<" | ">" | "<=" | ">=" ) whitespace* term )*
+term ::= factor ( whitespace* ( "+" | "-" ) whitespace* factor )*
+factor ::= unary ( whitespace* ( "*" | "/" ) whitespace* unary )*
+unary ::= ( ( "-" | "!" ) whitespace* unary ) | call
+
+call ::= primary ( whitespace* "(" whitespace* call_arguments? whitespace* ")" )*
+call_arguments ::= expression ( whitespace* "," whitespace* expression )*
+
+primary ::= literal | identifier | grouping
+literal ::= number | string | "true" | "false" | "nil"
+number ::= [0-9]+ ( "." [0-9]+ )?
+string ::= '"' ([#x00-#xFF] - ["])* '"'
+identifier ::= [a-zA-Z_] [a-zA-Z0-9_]*
+grouping ::= "(" whitespace* expression whitespace* ")"
+whitespace ::= #x09 | #x0A | #x0D | #x20

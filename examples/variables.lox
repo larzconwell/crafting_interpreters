@@ -1,0 +1,4 @@
+var nilVar;
+var strVar = "string value";
+
+strVar = "a different string value";

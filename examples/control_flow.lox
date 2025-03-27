@@ -1,0 +1,16 @@
+var boolVar = true;
+if (boolVar) {
+	print "yes";
+} else {
+	print "no";
+}
+
+var counter = 1;
+while (counter < 10) {
+	print counter;
+	counter = counter + 1;
+}
+
+for (var counter = 1; counter < 10; counter = counter + 1) {
+	print counter;
+}

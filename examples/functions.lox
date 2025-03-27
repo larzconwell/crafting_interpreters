@@ -1,0 +1,5 @@
+fun addVals(a, b, c) {
+	return a + b + c;
+}
+
+print addVals(1, 1, 1);

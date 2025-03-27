@@ -1,0 +1,24 @@
+class Printer {
+	init(prefix) {
+		this.prefix = prefix;
+	}
+
+	print(val) {
+		print this.prefix + ": " + val;
+	}
+}
+
+class Logger < Printer {
+	init() {
+		super.init("logger");
+	}
+}
+
+fun printer(klass, val) {
+	var instance = klass();
+
+	instance.print(val);
+}
+
+var klass = Logger;
+printer(klass, "hello"); // logger: hello

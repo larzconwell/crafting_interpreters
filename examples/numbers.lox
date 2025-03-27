@@ -1,0 +1,2 @@
+print 123; // Floating point integer
+print 1.23; // Floating point decimal
