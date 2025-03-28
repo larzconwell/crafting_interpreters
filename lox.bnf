@@ -9,6 +9,8 @@ function_declaration ::= "fun" whitespace* function
 function ::= identifier whitespace* "(" whitespace* function_parameters? whitespace* ")" whitespace* block
 function_parameters ::= identifier ( whitespace* "," whitespace* identifier )*
 
+class_declaration ::= "class" whitespace* identifier whitespace* "{" whitespace* function* whitespace* "}"
+
 statement ::= expression_statement | print_statement | return_statement | if_statement | while_statement | for_statement | block
 expression_statement ::= expression whitespace* ";"
 print_statement ::= "print" whitespace* expression whitespace* ";"

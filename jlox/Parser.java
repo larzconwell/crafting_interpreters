@@ -35,6 +35,10 @@ class Parser {
         return functionDeclaration("function");
       }
 
+      if (match(TokenType.CLASS)) {
+        return classDeclaration();
+      }
+
       return statement();
     } catch (ParseError error) {
       synchronize();
@@ -85,6 +89,23 @@ class Parser {
     consume(expect, String.format("Expect '%s' before block.", expect));
 
     return new Stmt.Function(name, parameters, block());
+  }
+
+  private Stmt.Class classDeclaration() {
+    var name = consume(TokenType.IDENTIFIER, "Expect name for class declaration.");
+
+    var expect = TokenType.LEFT_BRACE;
+    consume(expect, String.format("Expect '%s' after class name.", expect));
+
+    var methods = new ArrayList<Stmt.Function>();
+    while (!check(TokenType.RIGHT_BRACE) && !isAtEnd()) {
+      methods.add(functionDeclaration("method"));
+    }
+
+    expect = TokenType.RIGHT_BRACE;
+    consume(expect, String.format("Expect '%s' after class block.", expect));
+
+    return new Stmt.Class(name, methods);
   }
 
   private Stmt statement() {

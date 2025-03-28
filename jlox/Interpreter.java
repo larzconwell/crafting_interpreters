@@ -58,6 +58,7 @@ class Interpreter {
       case Stmt.While whileStmt  -> execWhile(whileStmt);
       case Stmt.Function func -> execFunction(func);
       case Stmt.Return returnStmt -> execReturn(returnStmt);
+      case Stmt.Class classStmt -> execClass(classStmt);
       default -> {}
     };
   }
@@ -122,6 +123,14 @@ class Interpreter {
     }
 
     throw new Return(value);
+  }
+
+  private void execClass(Stmt.Class stmt) {
+    // Defining it first will allow referencing the class within the classes methods.
+    environment.define(stmt.name().lexeme(), null);
+
+    var klass = new LoxClass(stmt.name().lexeme());
+    environment.assign(stmt.name(), klass);
   }
 
   private Object evalLiteral(Expr.Literal expr) {

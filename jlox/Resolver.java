@@ -37,6 +37,7 @@ class Resolver {
       case Stmt.While whileStmt -> resolveWhile(whileStmt);
       case Stmt.Function func -> resolveFunction(func);
       case Stmt.Return returnStmt -> resolveReturn(returnStmt);
+      case Stmt.Class classStmt -> resolveClass(classStmt);
       default -> {}
     };
   }
@@ -100,6 +101,12 @@ class Resolver {
     if (stmt.expr() != null) {
       resolve(stmt.expr());
     }
+  }
+
+  private void resolveClass(Stmt.Class stmt) {
+    // Define immediately after declaring to allow recursive references to the class
+    declare(stmt.name());
+    define(stmt.name());
   }
 
   private void resolveLogical(Expr.Logical expr) {

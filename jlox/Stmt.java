@@ -9,4 +9,5 @@ interface Stmt {
   record While(Expr condition, Stmt stmt) implements Stmt {}
   record Function(Token name, List<Token> params, List<Stmt> stmts) implements Stmt {}
   record Return(Token keyword, Expr expr) implements Stmt {}
+  record Class(Token name, List<Stmt.Function> methods) implements Stmt {}
 }
