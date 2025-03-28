@@ -42,7 +42,7 @@ class Parser {
     }
   }
 
-  private Stmt variableDeclaration() {
+  private Stmt.Var variableDeclaration() {
     var name = consume(TokenType.IDENTIFIER, "Expect identifier in variable declaration.");
 
     Expr expr = null;
@@ -56,7 +56,7 @@ class Parser {
     return new Stmt.Var(name, expr);
   }
 
-  private Stmt functionDeclaration(String kind) {
+  private Stmt.Function functionDeclaration(String kind) {
     var name = consume(TokenType.IDENTIFIER, String.format("Expect name for %s declaration.", kind));
 
     var expect = TokenType.LEFT_PAREN;
@@ -115,7 +115,7 @@ class Parser {
     return expressionStatement();
   }
 
-  private Stmt printStatement() {
+  private Stmt.Print printStatement() {
     var expr = expression();
 
     var expect = TokenType.SEMICOLON;
@@ -124,7 +124,7 @@ class Parser {
     return new Stmt.Print(expr);
   }
 
-  private Stmt returnStatement() {
+  private Stmt.Return returnStatement() {
     var keyword = previous();
 
     Expr expr = null;
@@ -138,11 +138,11 @@ class Parser {
     return new Stmt.Return(keyword, expr);
   }
 
-  private Stmt blockStatement() {
+  private Stmt.Block blockStatement() {
     return new Stmt.Block(block());
   }
 
-  private Stmt ifStatement() {
+  private Stmt.If ifStatement() {
     var expect = TokenType.LEFT_PAREN;
     consume(expect, String.format("Expect '%s' after 'if'.", expect));
 
@@ -161,7 +161,7 @@ class Parser {
     return new Stmt.If(condition, ifStmt, elseStmt);
   }
 
-  private Stmt whileStatement() {
+  private Stmt.While whileStatement() {
     var expect = TokenType.LEFT_PAREN;
     consume(expect, String.format("Expect '%s' after 'while'.", expect));
 
@@ -224,7 +224,7 @@ class Parser {
     return stmt;
   }
 
-  private Stmt expressionStatement() {
+  private Stmt.ExprStmt expressionStatement() {
     var expr = expression();
 
     var expect = TokenType.SEMICOLON;
@@ -336,7 +336,7 @@ class Parser {
     throw error(peek(), "Expect expression.");
   }
 
-  private Expr finishCall(Expr callee) {
+  private Expr.Call finishCall(Expr callee) {
     var args = new ArrayList<Expr>();
 
     if (!check(TokenType.RIGHT_PAREN)) {
