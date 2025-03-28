@@ -47,7 +47,7 @@ class Parser {
   }
 
   private Stmt.Var variableDeclaration() {
-    var name = consume(TokenType.IDENTIFIER, "Expect identifier in variable declaration.");
+    var identifier = consume(TokenType.IDENTIFIER, "Expect identifier in variable declaration.");
 
     Expr expr = null;
     if (match(TokenType.EQUAL)) {
@@ -57,11 +57,11 @@ class Parser {
     var expect = TokenType.SEMICOLON;
     consume(expect, String.format("Expect '%s' after declaration.", expect));
 
-    return new Stmt.Var(name, expr);
+    return new Stmt.Var(identifier, expr);
   }
 
   private Stmt.Function functionDeclaration(String kind) {
-    var name = consume(TokenType.IDENTIFIER, String.format("Expect name for %s declaration.", kind));
+    var identifier = consume(TokenType.IDENTIFIER, String.format("Expect name for %s declaration.", kind));
 
     var expect = TokenType.LEFT_PAREN;
     consume(expect, String.format("Expect '%s' after %s name.", expect, kind));
@@ -88,11 +88,11 @@ class Parser {
     expect = TokenType.LEFT_BRACE;
     consume(expect, String.format("Expect '%s' before block.", expect));
 
-    return new Stmt.Function(name, parameters, block());
+    return new Stmt.Function(identifier, parameters, block());
   }
 
   private Stmt.Class classDeclaration() {
-    var name = consume(TokenType.IDENTIFIER, "Expect name for class declaration.");
+    var identifier = consume(TokenType.IDENTIFIER, "Expect name for class declaration.");
 
     var expect = TokenType.LEFT_BRACE;
     consume(expect, String.format("Expect '%s' after class name.", expect));
@@ -105,7 +105,7 @@ class Parser {
     expect = TokenType.RIGHT_BRACE;
     consume(expect, String.format("Expect '%s' after class block.", expect));
 
-    return new Stmt.Class(name, methods);
+    return new Stmt.Class(identifier, methods);
   }
 
   private Stmt statement() {
@@ -266,8 +266,8 @@ class Parser {
       var value = assignment();
 
       if (expr instanceof Expr.Var) {
-        var name = ((Expr.Var)expr).name();
-        return new Expr.Assign(name, value);
+        var identifier = ((Expr.Var)expr).identifier();
+        return new Expr.Assign(identifier, value);
       }
 
       error(equals, "Invalid assignment identifier");

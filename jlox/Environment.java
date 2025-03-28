@@ -13,44 +13,44 @@ class Environment {
     this.enclosing = enclosing;
   }
 
-  void define(String name, Object value) {
-    values.put(name, value);
+  void define(String identifier, Object value) {
+    values.put(identifier, value);
   }
 
-  void assign(Token name, Object value) {
-    var key = name.lexeme();
+  void assign(Token identifier, Object value) {
+    var key = identifier.lexeme();
     if (values.containsKey(key)) {
       values.put(key, value);
       return;
     }
 
     if (enclosing != null) {
-      enclosing.assign(name, value);
+      enclosing.assign(identifier, value);
       return;
     }
 
-    throw new RuntimeError(name, String.format("Undefined variable '%s'", key));
+    throw new RuntimeError(identifier, String.format("Undefined variable '%s'", key));
   }
 
-  void assignAt(int depth, Token name, Object value) {
-    ancestor(depth).values.put(name.lexeme(), value);
+  void assignAt(int depth, Token identifier, Object value) {
+    ancestor(depth).values.put(identifier.lexeme(), value);
   }
 
-  Object get(Token name) {
-    var key = name.lexeme();
+  Object get(Token identifier) {
+    var key = identifier.lexeme();
     if (values.containsKey(key)) {
       return values.get(key);
     }
 
     if (enclosing != null) {
-      return enclosing.get(name);
+      return enclosing.get(identifier);
     }
 
-    throw new RuntimeError(name, String.format("Undefined variable '%s'", key));
+    throw new RuntimeError(identifier, String.format("Undefined variable '%s'", key));
   }
 
-  Object getAt(int depth, String name) {
-    return ancestor(depth).values.get(name);
+  Object getAt(int depth, String identifier) {
+    return ancestor(depth).values.get(identifier);
   }
 
   Environment ancestor(int depth) {

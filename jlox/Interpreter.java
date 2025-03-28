@@ -91,7 +91,7 @@ class Interpreter {
       value = evaluate(stmt.expr());
     }
 
-    environment.define(stmt.name().lexeme(), value);
+    environment.define(stmt.identifier().lexeme(), value);
   }
 
   private void execBlock(Stmt.Block stmt) {
@@ -113,7 +113,7 @@ class Interpreter {
   }
 
   private void execFunction(Stmt.Function stmt) {
-    environment.define(stmt.name().lexeme(), new LoxFunction(stmt, environment));
+    environment.define(stmt.identifier().lexeme(), new LoxFunction(stmt, environment));
   }
 
   private void execReturn(Stmt.Return stmt) {
@@ -127,10 +127,10 @@ class Interpreter {
 
   private void execClass(Stmt.Class stmt) {
     // Defining it first will allow referencing the class within the classes methods.
-    environment.define(stmt.name().lexeme(), null);
+    environment.define(stmt.identifier().lexeme(), null);
 
-    var klass = new LoxClass(stmt.name().lexeme());
-    environment.assign(stmt.name(), klass);
+    var klass = new LoxClass(stmt.identifier().lexeme());
+    environment.assign(stmt.identifier(), klass);
   }
 
   private Object evalLiteral(Expr.Literal expr) {
@@ -220,7 +220,7 @@ class Interpreter {
   }
 
   private Object evalVar(Expr.Var expr) {
-    return lookupVar(expr.name(), expr);
+    return lookupVar(expr.identifier(), expr);
   }
 
   private Object evalAssign(Expr.Assign expr) {
@@ -228,9 +228,9 @@ class Interpreter {
 
     var depth = locals.get(expr);
     if (depth == null) {
-      global.assign(expr.name(), value);
+      global.assign(expr.identifier(), value);
     } else {
-      environment.assignAt(depth, expr.name(), value);
+      environment.assignAt(depth, expr.identifier(), value);
     }
 
     return value;
@@ -255,13 +255,13 @@ class Interpreter {
     return func.call(this, args);
   }
 
-  private Object lookupVar(Token name, Expr expr) {
+  private Object lookupVar(Token identifier, Expr expr) {
     var depth = locals.get(expr);
     if (depth == null) {
-      return global.get(name);
+      return global.get(identifier);
     }
 
-    return environment.getAt(depth, name.lexeme());
+    return environment.getAt(depth, identifier.lexeme());
   }
 
   private boolean isEqual(Object left, Object right) {

@@ -56,13 +56,13 @@ class Resolver {
   }
 
   private void resolveVar(Stmt.Var stmt) {
-    declare(stmt.name());
+    declare(stmt.identifier());
 
     if (stmt.expr() != null) {
       resolve(stmt.expr());
     }
 
-    define(stmt.name());
+    define(stmt.identifier());
   }
 
   private void resolveBlock(Stmt.Block stmt) {
@@ -87,8 +87,8 @@ class Resolver {
 
   private void resolveFunction(Stmt.Function stmt) {
     // Define immediately after declaring to allow recursive references to the function
-    declare(stmt.name());
-    define(stmt.name());
+    declare(stmt.identifier());
+    define(stmt.identifier());
 
     resolveFunctionLiteral(stmt, FunctionType.FUNCTION);
   }
@@ -105,8 +105,8 @@ class Resolver {
 
   private void resolveClass(Stmt.Class stmt) {
     // Define immediately after declaring to allow recursive references to the class
-    declare(stmt.name());
-    define(stmt.name());
+    declare(stmt.identifier());
+    define(stmt.identifier());
   }
 
   private void resolveLogical(Expr.Logical expr) {
@@ -124,16 +124,16 @@ class Resolver {
   }
 
   private void resolveVar(Expr.Var expr) {
-    if (!scopes.isEmpty() && scopes.peek().get(expr.name().lexeme()) == Boolean.FALSE) {
-      Lox.error(expr.name(), "Cannot refer to variable in its own initializer");
+    if (!scopes.isEmpty() && scopes.peek().get(expr.identifier().lexeme()) == Boolean.FALSE) {
+      Lox.error(expr.identifier(), "Cannot refer to variable in its own initializer");
     }
 
-    resolveLocal(expr, expr.name());
+    resolveLocal(expr, expr.identifier());
   }
 
   private void resolveAssign(Expr.Assign expr) {
     resolve(expr.expr());
-    resolveLocal(expr, expr.name());
+    resolveLocal(expr, expr.identifier());
   }
 
   private void resolveCall(Expr.Call expr) {
@@ -160,10 +160,10 @@ class Resolver {
     currentFunction = enclosingFunction;
   }
 
-  private void resolveLocal(Expr expr, Token name) {
+  private void resolveLocal(Expr expr, Token identifier) {
     // Inner most scope to outer most
     for (var i = scopes.size() - 1; i >= 0; i--) {
-      if (scopes.get(i).containsKey(name.lexeme())) {
+      if (scopes.get(i).containsKey(identifier.lexeme())) {
         // How many scopes away from the expression we found the declaration
         // e.g. in the same scope then 0, in the parent scope then 1
         interpreter.resolve(expr, scopes.size() - 1 - i);
@@ -180,24 +180,24 @@ class Resolver {
     scopes.pop();
   }
 
-  private void declare(Token name) {
+  private void declare(Token identifier) {
     if (scopes.isEmpty()) {
       return;
     }
 
     var scope = scopes.peek();
-    if (scope.containsKey(name.lexeme())) {
-      Lox.error(name, "A variable with this name already exists in this scope.");
+    if (scope.containsKey(identifier.lexeme())) {
+      Lox.error(identifier, "A variable with this name already exists in this scope.");
     }
 
-    scope.put(name.lexeme(), false);
+    scope.put(identifier.lexeme(), false);
   }
 
-  private void define(Token name) {
+  private void define(Token identifier) {
     if (scopes.isEmpty()) {
       return;
     }
 
-    scopes.peek().put(name.lexeme(), true);
+    scopes.peek().put(identifier.lexeme(), true);
   }
 }

@@ -1,8 +1,8 @@
 import java.util.List;
 
-record LoxClass(String name) implements LoxCallable {
+record LoxClass(String identifier) implements LoxCallable {
   public String toString() {
-    return String.format("<class - %s>", name());
+    return String.format("<class - %s>", identifier());
   }
 
   public int arity() {

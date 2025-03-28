@@ -2,7 +2,7 @@ import java.util.List;
 
 record LoxFunction(Stmt.Function declaration, Environment environment) implements LoxCallable {
   public String toString() {
-    return String.format("<function - %s>", declaration().name().lexeme());
+    return String.format("<function - %s>", declaration().identifier().lexeme());
   }
 
   public int arity() {
