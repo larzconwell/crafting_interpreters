@@ -47,11 +47,12 @@ class Resolver {
       case Expr.Grouping grouping -> resolve(grouping.expr());
       case Expr.Logical logical -> resolveLogical(logical);
       case Expr.Binary binary -> resolveBinary(binary);
-      case Expr.Unary unary -> resolveUnary(unary);
+      case Expr.Unary unary -> resolve(unary.expr());
       case Expr.Var var -> resolveVar(var);
       case Expr.Assign assign -> resolveAssign(assign);
       case Expr.Call call -> resolveCall(call);
-      case Expr.InstanceGet get -> resolveInstanceGet(get);
+      case Expr.InstanceGet get -> resolve(get.instance());
+      case Expr.InstanceSet set -> resolveInstanceSet(set);
       default -> {}
     }
   }
@@ -120,10 +121,6 @@ class Resolver {
     resolve(expr.right());
   }
 
-  private void resolveUnary(Expr.Unary expr) {
-    resolve(expr.expr());
-  }
-
   private void resolveVar(Expr.Var expr) {
     if (!scopes.isEmpty() && scopes.peek().get(expr.identifier().lexeme()) == Boolean.FALSE) {
       Lox.error(expr.identifier(), "Cannot refer to variable in its own initializer");
@@ -145,8 +142,9 @@ class Resolver {
     }
   }
 
-  private void resolveInstanceGet(Expr.InstanceGet expr) {
+  private void resolveInstanceSet(Expr.InstanceSet expr) {
     resolve(expr.instance());
+    resolve(expr.expr());
   }
 
   private void resolveFunctionLiteral(Stmt.Function stmt, FunctionType type) {

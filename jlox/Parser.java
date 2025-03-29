@@ -268,6 +268,9 @@ class Parser {
       if (expr instanceof Expr.Var) {
         var identifier = ((Expr.Var)expr).identifier();
         return new Expr.Assign(identifier, value);
+      } else if (expr instanceof Expr.InstanceGet) {
+        var get = (Expr.InstanceGet)expr;
+        return new Expr.InstanceSet(get.instance(), get.identifier(), value);
       }
 
       error(equals, "Invalid assignment identifier");

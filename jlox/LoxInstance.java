@@ -3,7 +3,7 @@ import java.util.HashMap;
 
 class LoxInstance {
   private LoxClass klass;
-  private final Map<String, Object> fields = new HashMap<>();
+  private final Map<String, Object> properties = new HashMap<>();
 
   LoxInstance(LoxClass klass) {
     this.klass = klass;
@@ -16,10 +16,14 @@ class LoxInstance {
 
   Object get(Token identifier) {
     var key = identifier.lexeme();
-    if (fields.containsKey(key)) {
-      return fields.get(key);
+    if (properties.containsKey(key)) {
+      return properties.get(key);
     }
 
-    throw new RuntimeError(identifier, String.format("Undefined instance field '%s'.", key));
+    throw new RuntimeError(identifier, String.format("Undefined instance property '%s'.", key));
+  }
+
+  void set(Token identifier, Object value) {
+    properties.put(identifier.lexeme(), value);
   }
 }

@@ -74,6 +74,7 @@ class Interpreter {
       case Expr.Assign assign -> evalAssign(assign);
       case Expr.Call call -> evalCall(call);
       case Expr.InstanceGet get -> evalInstanceGet(get);
+      case Expr.InstanceSet set -> evalInstanceSet(set);
       default -> null;
     };
   }
@@ -263,6 +264,17 @@ class Interpreter {
     }
 
     return ((LoxInstance)instance).get(expr.identifier());
+  }
+
+  private Object evalInstanceSet(Expr.InstanceSet expr) {
+    var instance = evaluate(expr.instance());
+    if (!(instance instanceof LoxInstance)) {
+      throw new RuntimeError(expr.identifier(), "Only instances of classes have properties.");
+    }
+
+    var value = evaluate(expr.expr());
+    ((LoxInstance)instance).set(expr.identifier(), value);
+    return value;
   }
 
   private Object lookupVar(Token identifier, Expr expr) {

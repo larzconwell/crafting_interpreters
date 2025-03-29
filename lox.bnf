@@ -23,7 +23,7 @@ block ::= "{" whitespace* declaration* whitespace* "}"
 expression ::= assignment
 
 /* Precedence ordered lowest to highest without left recursion */
-assignment ::= ( identifier whitespace* "=" whitespace* assignment ) | logical_or
+assignment ::= ( ( call "." )? identifier whitespace* "=" whitespace* assignment ) | logical_or
 logical_or ::=logical_and ( whitespace* "or" whitespace* logical_and )*
 logical_and ::= equality ( whitespace* "and" whitespace* equality )*
 equality ::= comparison ( whitespace* ( "==" | "!=" ) whitespace* comparison )*
