@@ -9,4 +9,5 @@ interface Expr {
   record Var(Token identifier) implements Expr {}
   record Assign(Token identifier, Expr expr) implements Expr {}
   record Call(Expr callee, Token paren, List<Expr> args) implements Expr {}
+  record InstanceGet(Expr instance, Token identifier) implements Expr {}
 }

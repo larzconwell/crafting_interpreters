@@ -51,6 +51,7 @@ class Resolver {
       case Expr.Var var -> resolveVar(var);
       case Expr.Assign assign -> resolveAssign(assign);
       case Expr.Call call -> resolveCall(call);
+      case Expr.InstanceGet get -> resolveInstanceGet(get);
       default -> {}
     }
   }
@@ -142,6 +143,10 @@ class Resolver {
     for (var arg : expr.args()) {
       resolve(arg);
     }
+  }
+
+  private void resolveInstanceGet(Expr.InstanceGet expr) {
+    resolve(expr.instance());
   }
 
   private void resolveFunctionLiteral(Stmt.Function stmt, FunctionType type) {

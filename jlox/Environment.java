@@ -29,7 +29,7 @@ class Environment {
       return;
     }
 
-    throw new RuntimeError(identifier, String.format("Undefined variable '%s'", key));
+    throw new RuntimeError(identifier, String.format("Undefined variable '%s'.", key));
   }
 
   void assignAt(int depth, Token identifier, Object value) {
@@ -46,7 +46,7 @@ class Environment {
       return enclosing.get(identifier);
     }
 
-    throw new RuntimeError(identifier, String.format("Undefined variable '%s'", key));
+    throw new RuntimeError(identifier, String.format("Undefined variable '%s'.", key));
   }
 
   Object getAt(int depth, String identifier) {

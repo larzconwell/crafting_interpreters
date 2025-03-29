@@ -317,6 +317,11 @@ class Parser {
     while (true) {
       if (match(TokenType.LEFT_PAREN)) {
         expr = finishCall(expr);
+      } else if (match(TokenType.DOT)) {
+        var expect = TokenType.IDENTIFIER;
+        var identifier = consume(expect, String.format("Expect property '%s' after '.'.", expect));
+
+        expr = new Expr.InstanceGet(expr, identifier);
       } else {
         break;
       }

@@ -32,7 +32,7 @@ term ::= factor ( whitespace* ( "+" | "-" ) whitespace* factor )*
 factor ::= unary ( whitespace* ( "*" | "/" ) whitespace* unary )*
 unary ::= ( ( "-" | "!" ) whitespace* unary ) | call
 
-call ::= primary ( whitespace* "(" whitespace* call_arguments? whitespace* ")" )*
+call ::= primary ( ( whitespace* "(" whitespace* call_arguments? whitespace* ")" ) | ( whitespace* "." whitespace* identifier ) )*
 call_arguments ::= expression ( whitespace* "," whitespace* expression )*
 
 primary ::= literal | identifier | grouping

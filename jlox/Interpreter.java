@@ -73,6 +73,7 @@ class Interpreter {
       case Expr.Var var -> evalVar(var);
       case Expr.Assign assign -> evalAssign(assign);
       case Expr.Call call -> evalCall(call);
+      case Expr.InstanceGet get -> evalInstanceGet(get);
       default -> null;
     };
   }
@@ -253,6 +254,15 @@ class Interpreter {
     }
 
     return func.call(this, args);
+  }
+
+  private Object evalInstanceGet(Expr.InstanceGet expr) {
+    var instance = evaluate(expr.instance());
+    if (!(instance instanceof LoxInstance)) {
+      throw new RuntimeError(expr.identifier(), "Only instances of classes have properties.");
+    }
+
+    return ((LoxInstance)instance).get(expr.identifier());
   }
 
   private Object lookupVar(Token identifier, Expr expr) {
