@@ -60,8 +60,8 @@ class Resolver {
   private void resolveVar(Stmt.Var stmt) {
     declare(stmt.identifier());
 
-    if (stmt.expr() != null) {
-      resolve(stmt.expr());
+    if (stmt.value() != null) {
+      resolve(stmt.value());
     }
 
     define(stmt.identifier());
@@ -130,7 +130,7 @@ class Resolver {
   }
 
   private void resolveAssign(Expr.Assign expr) {
-    resolve(expr.expr());
+    resolve(expr.value());
     resolveLocal(expr, expr.identifier());
   }
 
@@ -143,8 +143,8 @@ class Resolver {
   }
 
   private void resolveInstanceSet(Expr.InstanceSet expr) {
+    resolve(expr.value());
     resolve(expr.instance());
-    resolve(expr.expr());
   }
 
   private void resolveFunctionLiteral(Stmt.Function stmt, FunctionType type) {

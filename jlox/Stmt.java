@@ -3,7 +3,7 @@ import java.util.List;
 interface Stmt {
   record ExprStmt(Expr expr) implements Stmt {}
   record Print(Expr expr) implements Stmt {}
-  record Var(Token identifier, Expr expr) implements Stmt {}
+  record Var(Token identifier, Expr value) implements Stmt {}
   record Block(List<Stmt> stmts) implements Stmt {}
   record If(Expr condition, Stmt ifStmt, Stmt elseStmt) implements Stmt {}
   record While(Expr condition, Stmt stmt) implements Stmt {}

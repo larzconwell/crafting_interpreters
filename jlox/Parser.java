@@ -49,15 +49,15 @@ class Parser {
   private Stmt.Var variableDeclaration() {
     var identifier = consume(TokenType.IDENTIFIER, "Expect identifier in variable declaration.");
 
-    Expr expr = null;
+    Expr value = null;
     if (match(TokenType.EQUAL)) {
-      expr = expression();
+      value = expression();
     }
 
     var expect = TokenType.SEMICOLON;
     consume(expect, String.format("Expect '%s' after declaration.", expect));
 
-    return new Stmt.Var(identifier, expr);
+    return new Stmt.Var(identifier, value);
   }
 
   private Stmt.Function functionDeclaration(String kind) {

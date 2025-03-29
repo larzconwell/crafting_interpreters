@@ -7,8 +7,8 @@ interface Expr {
   record Binary(Expr left, Token operator, Expr right) implements Expr {}
   record Unary(Token operator, Expr expr) implements Expr {}
   record Var(Token identifier) implements Expr {}
-  record Assign(Token identifier, Expr expr) implements Expr {}
+  record Assign(Token identifier, Expr value) implements Expr {}
   record Call(Expr callee, Token paren, List<Expr> args) implements Expr {}
   record InstanceGet(Expr instance, Token identifier) implements Expr {}
-  record InstanceSet(Expr instance, Token identifier, Expr expr) implements Expr {}
+  record InstanceSet(Expr instance, Token identifier, Expr value) implements Expr {}
 }

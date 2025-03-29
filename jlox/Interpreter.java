@@ -89,8 +89,8 @@ class Interpreter {
 
   private void execVar(Stmt.Var stmt) {
     Object value = null;
-    if (stmt.expr() != null) {
-      value = evaluate(stmt.expr());
+    if (stmt.value() != null) {
+      value = evaluate(stmt.value());
     }
 
     environment.define(stmt.identifier().lexeme(), value);
@@ -226,7 +226,7 @@ class Interpreter {
   }
 
   private Object evalAssign(Expr.Assign expr) {
-    var value = evaluate(expr.expr());
+    var value = evaluate(expr.value());
 
     var depth = locals.get(expr);
     if (depth == null) {
@@ -272,7 +272,7 @@ class Interpreter {
       throw new RuntimeError(expr.identifier(), "Only instances of classes have properties.");
     }
 
-    var value = evaluate(expr.expr());
+    var value = evaluate(expr.value());
     ((LoxInstance)instance).set(expr.identifier(), value);
     return value;
   }
