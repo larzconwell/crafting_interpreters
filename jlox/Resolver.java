@@ -5,7 +5,8 @@ import java.util.HashMap;
 
 enum FunctionType {
   NONE,
-  FUNCTION
+  FUNCTION,
+  METHOD,
 }
 
 // This is used to restrict variable references to variables that where
@@ -109,6 +110,10 @@ class Resolver {
     // Define immediately after declaring to allow recursive references to the class
     declare(stmt.identifier());
     define(stmt.identifier());
+
+    for (var method : stmt.methods()) {
+      resolveFunctionLiteral(method, FunctionType.METHOD);
+    }
   }
 
   private void resolveLogical(Expr.Logical expr) {

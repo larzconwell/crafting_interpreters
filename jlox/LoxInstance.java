@@ -20,6 +20,11 @@ class LoxInstance {
       return properties.get(key);
     }
 
+    var method = klass.getMethod(key);
+    if (method != null) {
+      return method;
+    }
+
     throw new RuntimeError(identifier, String.format("Undefined instance property '%s'.", key));
   }
 
