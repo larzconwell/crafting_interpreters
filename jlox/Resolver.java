@@ -9,6 +9,11 @@ enum FunctionType {
   METHOD,
 }
 
+enum ClassType {
+  NONE,
+  CLASS
+}
+
 // This is used to restrict variable references to variables that where
 // previously declared in the current scope or parent scopes, previously
 // meaning a variable reference on line 50 should only be able to access
@@ -17,6 +22,7 @@ class Resolver {
   private final Interpreter interpreter;
   private final Stack<Map<String, Boolean>> scopes = new Stack<>();
   private FunctionType currentFunction = FunctionType.NONE;
+  private ClassType currentClass = ClassType.NONE;
 
   Resolver(Interpreter interpreter) {
     this.interpreter = interpreter;
@@ -54,6 +60,7 @@ class Resolver {
       case Expr.Call call -> resolveCall(call);
       case Expr.InstanceGet get -> resolve(get.instance());
       case Expr.InstanceSet set -> resolveInstanceSet(set);
+      case Expr.This thisExpr -> resolveThis(thisExpr);
       default -> {}
     }
   }
@@ -111,9 +118,18 @@ class Resolver {
     declare(stmt.identifier());
     define(stmt.identifier());
 
+    var enclosingClass = currentClass;
+    currentClass = ClassType.CLASS;
+    beginScope();
+
+    scopes.peek().put("this", true);
+
     for (var method : stmt.methods()) {
       resolveFunctionLiteral(method, FunctionType.METHOD);
     }
+
+    endScope();
+    currentClass = enclosingClass;
   }
 
   private void resolveLogical(Expr.Logical expr) {
@@ -128,7 +144,7 @@ class Resolver {
 
   private void resolveVar(Expr.Var expr) {
     if (!scopes.isEmpty() && scopes.peek().get(expr.identifier().lexeme()) == Boolean.FALSE) {
-      Lox.error(expr.identifier(), "Cannot refer to variable in its own initializer");
+      Lox.error(expr.identifier(), "Cannot refer to variable in its own initializer.");
     }
 
     resolveLocal(expr, expr.identifier());
@@ -150,6 +166,14 @@ class Resolver {
   private void resolveInstanceSet(Expr.InstanceSet expr) {
     resolve(expr.value());
     resolve(expr.instance());
+  }
+
+  private void resolveThis(Expr.This expr) {
+    if (currentClass == ClassType.NONE) {
+      Lox.error(expr.keyword(), "Can't use 'this' outside of a class.");
+    }
+
+    resolveLocal(expr, expr.keyword());
   }
 
   private void resolveFunctionLiteral(Stmt.Function stmt, FunctionType type) {

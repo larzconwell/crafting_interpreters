@@ -25,4 +25,11 @@ record LoxFunction(Stmt.Function declaration, Environment environment) implement
 
     return null;
   }
+
+  LoxFunction bind(LoxInstance instance) {
+    var environment = new Environment(environment());
+    environment.define("this", instance);
+
+    return new LoxFunction(declaration(), environment);
+  }
 }

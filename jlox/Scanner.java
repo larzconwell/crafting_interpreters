@@ -90,7 +90,7 @@ class Scanner {
           }
 
           if (!isWhitespace(c)) {
-            Lox.error(line, String.format("Unexpected character %c", c));
+            Lox.error(line, String.format("Unexpected character ''%c'.", c));
           }
 
           yield null;
@@ -109,7 +109,7 @@ class Scanner {
     }
 
     if (isAtEnd()) {
-      Lox.error(line, "Unterminated string");
+      Lox.error(line, "Unterminated string.");
       return null;
     }
 

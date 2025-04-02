@@ -75,6 +75,7 @@ class Interpreter {
       case Expr.Call call -> evalCall(call);
       case Expr.InstanceGet get -> evalInstanceGet(get);
       case Expr.InstanceSet set -> evalInstanceSet(set);
+      case Expr.This thisExpr -> evalThis(thisExpr);
       default -> null;
     };
   }
@@ -280,6 +281,10 @@ class Interpreter {
     var value = evaluate(expr.value());
     ((LoxInstance)instance).set(expr.identifier(), value);
     return value;
+  }
+
+  private Object evalThis(Expr.This expr) {
+    return lookupVar(expr.keyword(), expr);
   }
 
   private Object lookupVar(Token identifier, Expr expr) {

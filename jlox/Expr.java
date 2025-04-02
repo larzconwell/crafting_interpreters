@@ -11,4 +11,5 @@ interface Expr {
   record Call(Expr callee, Token paren, List<Expr> args) implements Expr {}
   record InstanceGet(Expr instance, Token identifier) implements Expr {}
   record InstanceSet(Expr instance, Token identifier, Expr value) implements Expr {}
+  record This(Token keyword) implements Expr {}
 }
