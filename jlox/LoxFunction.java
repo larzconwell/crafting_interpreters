@@ -26,6 +26,12 @@ record LoxFunction(Stmt.Function declaration, Environment environment) implement
     return null;
   }
 
+  Object callAndReturn(Interpreter interpreter, List<Object> arguments, Object value) {
+    call(interpreter, arguments);
+
+    return value;
+  }
+
   LoxFunction bind(LoxInstance instance) {
     var environment = new Environment(environment());
     environment.define("this", instance);

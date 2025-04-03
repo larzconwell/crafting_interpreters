@@ -6,6 +6,7 @@ import java.util.HashMap;
 enum FunctionType {
   NONE,
   FUNCTION,
+  INITIALIZER,
   METHOD,
 }
 
@@ -109,6 +110,10 @@ class Resolver {
     }
 
     if (stmt.expr() != null) {
+      if (currentFunction == FunctionType.INITIALIZER) {
+        Lox.error(stmt.keyword(), "Can't return with a value from an initializer.");
+      }
+
       resolve(stmt.expr());
     }
   }
@@ -125,7 +130,12 @@ class Resolver {
     scopes.peek().put("this", true);
 
     for (var method : stmt.methods()) {
-      resolveFunctionLiteral(method, FunctionType.METHOD);
+      var type = FunctionType.METHOD;
+      if (method.identifier().lexeme().equals("init")) {
+        type = FunctionType.INITIALIZER;
+      }
+
+      resolveFunctionLiteral(method, type);
     }
 
     endScope();

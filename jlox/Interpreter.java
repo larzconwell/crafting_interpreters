@@ -132,12 +132,20 @@ class Interpreter {
     // Defining it first will allow referencing the class within the classes methods.
     environment.define(stmt.identifier().lexeme(), null);
 
+    LoxFunction initializer = null;
     var methods = new HashMap<String, LoxFunction>();
     for (var method : stmt.methods()) {
-      methods.put(method.identifier().lexeme(), new LoxFunction(method, environment));
+      var function = new LoxFunction(method, environment);
+      var identifier = method.identifier().lexeme();
+
+      if (identifier.equals("init")) {
+        initializer = function;
+      } else {
+        methods.put(identifier, function);
+      }
     }
 
-    var klass = new LoxClass(stmt.identifier().lexeme(), methods);
+    var klass = new LoxClass(stmt.identifier().lexeme(), initializer, methods);
     environment.assign(stmt.identifier(), klass);
   }
 
