@@ -129,6 +129,16 @@ class Interpreter {
   }
 
   private void execClass(Stmt.Class stmt) {
+    LoxClass superclass = null;
+    if (stmt.superclass() != null) {
+      var expr = evaluate(stmt.superclass());
+      if (!(expr instanceof LoxClass)) {
+        throw new RuntimeError(stmt.superclass().identifier(), "Superclass must be a class.");
+      }
+
+      superclass = (LoxClass)expr;
+    }
+
     // Defining it first will allow referencing the class within the classes methods.
     environment.define(stmt.identifier().lexeme(), null);
 
@@ -145,7 +155,7 @@ class Interpreter {
       }
     }
 
-    var klass = new LoxClass(stmt.identifier().lexeme(), initializer, methods);
+    var klass = new LoxClass(stmt.identifier().lexeme(), superclass, initializer, methods);
     environment.assign(stmt.identifier(), klass);
   }
 

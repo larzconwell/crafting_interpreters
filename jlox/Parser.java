@@ -94,6 +94,12 @@ class Parser {
   private Stmt.Class classDeclaration() {
     var identifier = consume(TokenType.IDENTIFIER, "Expect name for class declaration.");
 
+    Expr.Var superclass = null;
+    if (match(TokenType.LESS)) {
+      var superidentifier = consume(TokenType.IDENTIFIER, "Expect superclass name for class declaration.");
+      superclass = new Expr.Var(superidentifier);
+    }
+
     var expect = TokenType.LEFT_BRACE;
     consume(expect, String.format("Expect '%s' after class name.", expect));
 
@@ -105,7 +111,7 @@ class Parser {
     expect = TokenType.RIGHT_BRACE;
     consume(expect, String.format("Expect '%s' after class block.", expect));
 
-    return new Stmt.Class(identifier, methods);
+    return new Stmt.Class(identifier, superclass, methods);
   }
 
   private Stmt statement() {

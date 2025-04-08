@@ -123,6 +123,14 @@ class Resolver {
     declare(stmt.identifier());
     define(stmt.identifier());
 
+    if (stmt.superclass() != null) {
+      if (stmt.identifier().lexeme().equals(stmt.superclass().identifier().lexeme())) {
+        Lox.error(stmt.superclass().identifier(), "A class can't inherit itself.");
+      }
+
+      resolve(stmt.superclass());
+    }
+
     var enclosingClass = currentClass;
     currentClass = ClassType.CLASS;
     beginScope();

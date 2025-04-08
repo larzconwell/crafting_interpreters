@@ -1,7 +1,7 @@
 import java.util.List;
 import java.util.Map;
 
-record LoxClass(String identifier, LoxFunction initializer, Map<String, LoxFunction> methods) implements LoxCallable {
+record LoxClass(String identifier, LoxClass superclass, LoxFunction initializer, Map<String, LoxFunction> methods) implements LoxCallable {
   public String toString() {
     return String.format("<class - %s>", identifier());
   }
