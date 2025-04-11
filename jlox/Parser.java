@@ -360,15 +360,28 @@ class Parser {
       return new Expr.This(previous());
     }
 
+    if (match(TokenType.SUPER)) {
+      var keyword = previous();
+
+      var expect = TokenType.DOT;
+      consume(expect, String.format("Expect '%s' after super.", expect));
+
+      expect = TokenType.IDENTIFIER;
+      var method = consume(expect, String.format("Expect identifier after super"));
+
+      return new Expr.Super(keyword, method);
+    }
+
     if (match(TokenType.IDENTIFIER)) {
       return new Expr.Var(previous());
     }
 
     if (match(TokenType.LEFT_PAREN)) {
       var expr = expression();
-      var expect = TokenType.RIGHT_PAREN;
 
+      var expect = TokenType.RIGHT_PAREN;
       consume(expect, String.format("Expect '%s' after expression.", expect));
+
       return new Expr.Grouping(expr);
     }
 

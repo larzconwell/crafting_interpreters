@@ -76,6 +76,7 @@ class Interpreter {
       case Expr.InstanceGet get -> evalInstanceGet(get);
       case Expr.InstanceSet set -> evalInstanceSet(set);
       case Expr.This thisExpr -> evalThis(thisExpr);
+      case Expr.Super superExpr -> evalSuper(superExpr);
       default -> null;
     };
   }
@@ -142,6 +143,11 @@ class Interpreter {
     // Defining it first will allow referencing the class within the classes methods.
     environment.define(stmt.identifier().lexeme(), null);
 
+    if (superclass != null) {
+      environment = new Environment(environment);
+      environment.define("super", superclass);
+    }
+
     LoxFunction initializer = null;
     var methods = new HashMap<String, LoxFunction>();
     for (var method : stmt.methods()) {
@@ -156,6 +162,11 @@ class Interpreter {
     }
 
     var klass = new LoxClass(stmt.identifier().lexeme(), superclass, initializer, methods);
+
+    if (superclass != null) {
+      environment = environment.enclosing;
+    }
+
     environment.assign(stmt.identifier(), klass);
   }
 
@@ -303,6 +314,20 @@ class Interpreter {
 
   private Object evalThis(Expr.This expr) {
     return lookupVar(expr.keyword(), expr);
+  }
+
+  private Object evalSuper(Expr.Super expr) {
+    var depth = locals.get(expr);
+    var superclass = (LoxClass)environment.getAt(depth, "super");
+    var instance = (LoxInstance)environment.getAt(depth - 1, "this");
+
+    var identifier = expr.method().lexeme();
+    var method = superclass.getMethod(identifier);
+    if (method == null) {
+      throw new RuntimeError(expr.method(), String.format("Undefined instance property '%s'.", identifier));
+    }
+
+    return method.bind(instance);
   }
 
   private Object lookupVar(Token identifier, Expr expr) {

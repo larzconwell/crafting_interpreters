@@ -12,4 +12,5 @@ interface Expr {
   record InstanceGet(Expr instance, Token identifier) implements Expr {}
   record InstanceSet(Expr instance, Token identifier, Expr value) implements Expr {}
   record This(Token keyword) implements Expr {}
+  record Super(Token keyword, Token method) implements Expr {}
 }

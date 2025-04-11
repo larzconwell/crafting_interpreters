@@ -12,7 +12,8 @@ enum FunctionType {
 
 enum ClassType {
   NONE,
-  CLASS
+  CLASS,
+  SUBCLASS,
 }
 
 // This is used to restrict variable references to variables that where
@@ -62,6 +63,7 @@ class Resolver {
       case Expr.InstanceGet get -> resolve(get.instance());
       case Expr.InstanceSet set -> resolveInstanceSet(set);
       case Expr.This thisExpr -> resolveThis(thisExpr);
+      case Expr.Super superExpr -> resolveSuper(superExpr);
       default -> {}
     }
   }
@@ -123,18 +125,23 @@ class Resolver {
     declare(stmt.identifier());
     define(stmt.identifier());
 
+    var enclosingClass = currentClass;
+    currentClass = ClassType.CLASS;
+
     if (stmt.superclass() != null) {
       if (stmt.identifier().lexeme().equals(stmt.superclass().identifier().lexeme())) {
         Lox.error(stmt.superclass().identifier(), "A class can't inherit itself.");
       }
 
+      currentClass = ClassType.SUBCLASS;
+
       resolve(stmt.superclass());
+
+      beginScope();
+      scopes.peek().put("super", true);
     }
 
-    var enclosingClass = currentClass;
-    currentClass = ClassType.CLASS;
     beginScope();
-
     scopes.peek().put("this", true);
 
     for (var method : stmt.methods()) {
@@ -147,6 +154,11 @@ class Resolver {
     }
 
     endScope();
+
+    if (stmt.superclass() != null) {
+      endScope();
+    }
+
     currentClass = enclosingClass;
   }
 
@@ -189,6 +201,16 @@ class Resolver {
   private void resolveThis(Expr.This expr) {
     if (currentClass == ClassType.NONE) {
       Lox.error(expr.keyword(), "Can't use 'this' outside of a class.");
+    }
+
+    resolveLocal(expr, expr.keyword());
+  }
+
+  private void resolveSuper(Expr.Super expr) {
+    if (currentClass == ClassType.NONE) {
+      Lox.error(expr.keyword(), "Can't use 'super' outside of a class.");
+    } else if (currentClass == ClassType.CLASS) {
+      Lox.error(expr.keyword(), "Can't use 'super' in a class with no super class.");
     }
 
     resolveLocal(expr, expr.keyword());

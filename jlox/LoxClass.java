@@ -29,6 +29,10 @@ record LoxClass(String identifier, LoxClass superclass, LoxFunction initializer,
       return methods().get(identifier);
     }
 
+    if (superclass() != null) {
+      return superclass().getMethod(identifier);
+    }
+
     return null;
   }
 }
