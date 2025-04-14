@@ -117,7 +117,7 @@ class Interpreter {
   }
 
   private void execFunction(Stmt.Function stmt) {
-    environment.define(stmt.identifier().lexeme(), new LoxFunction(stmt, environment));
+    environment.define(stmt.identifier().lexeme(), new LoxFunction(stmt, environment, false));
   }
 
   private void execReturn(Stmt.Return stmt) {
@@ -148,20 +148,15 @@ class Interpreter {
       environment.define("super", superclass);
     }
 
-    LoxFunction initializer = null;
     var methods = new HashMap<String, LoxFunction>();
     for (var method : stmt.methods()) {
-      var function = new LoxFunction(method, environment);
       var identifier = method.identifier().lexeme();
+      var function = new LoxFunction(method, environment, identifier.equals("init"));
 
-      if (identifier.equals("init")) {
-        initializer = function;
-      } else {
-        methods.put(identifier, function);
-      }
+      methods.put(identifier, function);
     }
 
-    var klass = new LoxClass(stmt.identifier().lexeme(), superclass, initializer, methods);
+    var klass = new LoxClass(stmt.identifier().lexeme(), superclass, methods);
 
     if (superclass != null) {
       environment = environment.enclosing;

@@ -1,14 +1,15 @@
 import java.util.List;
 import java.util.Map;
 
-record LoxClass(String identifier, LoxClass superclass, LoxFunction initializer, Map<String, LoxFunction> methods) implements LoxCallable {
+record LoxClass(String identifier, LoxClass superclass, Map<String, LoxFunction> methods) implements LoxCallable {
   public String toString() {
     return String.format("<class - %s>", identifier());
   }
 
   public int arity() {
-    if (initializer() != null) {
-      return initializer().arity();
+    var initializer = getMethod("init");
+    if (initializer != null) {
+      return initializer.arity();
     }
 
     return 0;
@@ -17,8 +18,9 @@ record LoxClass(String identifier, LoxClass superclass, LoxFunction initializer,
   public Object call(Interpreter interpreter, List<Object> arguments) {
     var instance = new LoxInstance(this);
 
-    if (initializer() != null) {
-      initializer().bind(instance).callAndReturn(interpreter, arguments, instance);
+    var initializer = getMethod("init");
+    if (initializer != null) {
+      initializer.bind(instance).call(interpreter, arguments);
     }
 
     return instance;

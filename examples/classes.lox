@@ -1,24 +1,24 @@
-class Printer {
+class Writer {
 	init(prefix) {
 		this.prefix = prefix;
 	}
 
-	print(val) {
+	write(val) {
 		print this.prefix + ": " + val;
 	}
 }
 
-class Logger < Printer {
+class Logger < Writer {
 	init() {
 		super.init("logger");
 	}
 }
 
-fun printer(klass, val) {
+fun write(klass, val) {
 	var instance = klass();
 
-	instance.print(val);
+	instance.write(val);
 }
 
 var klass = Logger;
-printer(klass, "hello"); // logger: hello
+write(klass, "hello"); // logger: hello

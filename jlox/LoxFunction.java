@@ -1,6 +1,6 @@
 import java.util.List;
 
-record LoxFunction(Stmt.Function declaration, Environment environment) implements LoxCallable {
+record LoxFunction(Stmt.Function declaration, Environment environment, boolean isInitializer) implements LoxCallable {
   public String toString() {
     return String.format("<function - %s>", declaration().identifier().lexeme());
   }
@@ -20,22 +20,24 @@ record LoxFunction(Stmt.Function declaration, Environment environment) implement
     try {
       interpreter.executeBlock(declaration().stmts(), environment);
     } catch (Return ret) {
+      if (isInitializer()) {
+        return environment().getAt(0, "this");
+      }
+
       return ret.value;
     }
 
+    if (isInitializer()) {
+      return environment().getAt(0, "this");
+    }
+
     return null;
-  }
-
-  Object callAndReturn(Interpreter interpreter, List<Object> arguments, Object value) {
-    call(interpreter, arguments);
-
-    return value;
   }
 
   LoxFunction bind(LoxInstance instance) {
     var environment = new Environment(environment());
     environment.define("this", instance);
 
-    return new LoxFunction(declaration(), environment);
+    return new LoxFunction(declaration(), environment, isInitializer());
   }
 }
