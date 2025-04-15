@@ -18,6 +18,27 @@ class Interpreter {
         return Instant.now().getEpochSecond();
       }
     });
+
+    global.define("print", new LoxCallable() {
+      public String toString() { return "<interpreter function - print>"; }
+      public int arity() { return 1; }
+
+      public Object call(Interpreter interpreter, List<Object> arguments) {
+        var value = arguments.get(0);
+
+        String str = "nil";
+        if (value != null) {
+          str = value.toString();
+        }
+
+        if (value instanceof Double && str.endsWith(".0")) {
+          str = str.substring(0, str.length() - 2);
+        }
+
+        System.out.println(str);
+        return null;
+      }
+    });
   }
 
   void interpret(List<Stmt> stmts) {
@@ -51,7 +72,6 @@ class Interpreter {
   private void execute(Stmt stmt) {
     switch (stmt) {
       case Stmt.ExprStmt expr -> execExprStmt(expr);
-      case Stmt.Print print  -> execPrint(print);
       case Stmt.Var var -> execVar(var);
       case Stmt.Block block -> execBlock(block);
       case Stmt.If ifStmt -> execIf(ifStmt);
@@ -83,10 +103,6 @@ class Interpreter {
 
   private void execExprStmt(Stmt.ExprStmt stmt) {
     evaluate(stmt.expr());
-  }
-
-  private void execPrint(Stmt.Print stmt) {
-    System.out.println(stringify(evaluate(stmt.expr())));
   }
 
   private void execVar(Stmt.Var stmt) {
@@ -386,23 +402,5 @@ class Interpreter {
     if (operand instanceof Double && (double)operand == 0) {
       throw new RuntimeError(operator, "Cannot be divide by zero.");
     }
-  }
-
-  private String stringify(Object value) {
-    if (value == null) {
-      return "nil";
-    }
-
-    var text = value.toString();
-
-    if (value instanceof Double && text.endsWith(".0")) {
-      return text.substring(0, text.length() - 2);
-    }
-
-    if (value instanceof String) {
-      return String.format("\"%s\"", value);
-    }
-
-    return text;
   }
 }

@@ -115,10 +115,6 @@ class Parser {
   }
 
   private Stmt statement() {
-    if (match(TokenType.PRINT)) {
-      return printStatement();
-    }
-
     if (match(TokenType.RETURN)) {
       return returnStatement();
     }
@@ -140,15 +136,6 @@ class Parser {
     }
 
     return expressionStatement();
-  }
-
-  private Stmt.Print printStatement() {
-    var expr = expression();
-
-    var expect = TokenType.SEMICOLON;
-    consume(expect, String.format("Expect '%s' after expression.", expect));
-
-    return new Stmt.Print(expr);
   }
 
   private Stmt.Return returnStatement() {
@@ -511,7 +498,6 @@ class Parser {
         case TokenType.WHILE:
         case TokenType.FUN:
         case TokenType.RETURN:
-        case TokenType.PRINT:
         case TokenType.VAR:
         case TokenType.CLASS:
           return;

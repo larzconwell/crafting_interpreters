@@ -38,7 +38,6 @@ enum TokenType {
 
   FUN("fun"),
   RETURN("return"),
-  PRINT("print"),
   VAR("var"),
 
   CLASS("class"),

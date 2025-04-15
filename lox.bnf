@@ -11,9 +11,8 @@ function_parameters ::= identifier ( whitespace* "," whitespace* identifier )*
 
 class_declaration ::= "class" whitespace* identifier whitespace* ( "<" whitespace* identifier whitespace* )? "{" whitespace* function* whitespace* "}"
 
-statement ::= expression_statement | print_statement | return_statement | if_statement | while_statement | for_statement | block
+statement ::= expression_statement | return_statement | if_statement | while_statement | for_statement | block
 expression_statement ::= expression whitespace* ";"
-print_statement ::= "print" whitespace* expression whitespace* ";"
 return_statement ::= "return" whitespace* exression? whitespace* ";"
 if_statement ::= "if" whitespace* "(" whitespace* expression whitespace* ")" whitespace* statement ( whitespace* "else" whitespace* statement )?
 while_statement ::= "while" whitespace* "(" whitespace* expression whitespace* ")" whitespace* statement

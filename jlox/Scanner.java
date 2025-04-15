@@ -15,7 +15,6 @@ class Scanner {
     Map.entry("while", TokenType.WHILE),
     Map.entry("fun", TokenType.FUN),
     Map.entry("return", TokenType.RETURN),
-    Map.entry("print", TokenType.PRINT),
     Map.entry("var", TokenType.VAR),
     Map.entry("class", TokenType.CLASS),
     Map.entry("super", TokenType.SUPER),

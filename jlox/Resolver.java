@@ -39,7 +39,6 @@ class Resolver {
   private void resolve(Stmt stmt) {
     switch (stmt) {
       case Stmt.ExprStmt expr -> resolve(expr.expr());
-      case Stmt.Print print -> resolve(print.expr());
       case Stmt.Var var -> resolveVar(var);
       case Stmt.Block block -> resolveBlock(block);
       case Stmt.If ifStmt -> resolveIf(ifStmt);
