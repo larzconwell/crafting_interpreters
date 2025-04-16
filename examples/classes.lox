@@ -1,24 +1,28 @@
 class Writer {
 	init(prefix) {
-		this.prefix = prefix;
+		this.prefix = prefix
 	}
 
 	write(val) {
-		print(this.prefix + ": " + val);
+		print(this.prefix + ": " + val)
+		return this
 	}
 }
 
 class Logger < Writer {
 	init() {
-		super.init("logger");
+		super.init("logger")
 	}
 }
 
 fun write(klass, val) {
-	var instance = klass();
+	var instance = klass()
 
-	instance.write(val);
+	instance.write(val)
 }
 
-var klass = Logger;
-write(klass, "hello"); // logger: hello
+var klass = Logger
+write(klass, "hello") // logger: hello
+
+var instance = Logger()
+instance.write("first").write("second")

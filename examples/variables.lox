@@ -1,4 +1,5 @@
-var nilVar;
-var strVar = "string value";
+var nilVar
+var strVar = "string value"
 
-strVar = "a different string value";
+nilVar = nil
+strVar = "a different string value"

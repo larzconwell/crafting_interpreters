@@ -36,8 +36,25 @@ class Scanner {
     while(!isAtEnd()) {
       start = current;
 
+      var startLine = line;
       var token = scanToken();
       if (token == null) {
+        if (line != startLine && !tokens.isEmpty()) {
+          switch (tokens.getLast().type()) {
+            case TokenType.IDENTIFIER,
+                  TokenType.NUMBER,
+                  TokenType.STRING,
+                  TokenType.NIL,
+                  TokenType.TRUE,
+                  TokenType.FALSE,
+                  TokenType.THIS,
+                  TokenType.RETURN,
+                  TokenType.RIGHT_PAREN
+                  -> tokens.add(createToken(TokenType.SEMICOLON));
+            default -> {}
+          }
+        }
+
         continue;
       }
 

@@ -1,11 +1,11 @@
 fun adder(a, b) {
 	fun add(c, d) {
-		return a + b + c + d;
+		return a + b + c + d
 	}
 
-	return add;
+	return add
 }
 
-var add = adder(1, 1);
-print(add(1, 1)); // 4
-print(adder(1, 1)(1, 1)); // 4
+var add = adder(1, 1)
+print(add(1, 1)) // 4
+print(adder(1, 1)(1, 1)) // 4
