@@ -24,9 +24,9 @@ class Interpreter {
       public int arity() { return 1; }
 
       public Object call(Interpreter interpreter, List<Object> arguments) {
-        var value = arguments.get(0);
+        var value = arguments.getFirst();
 
-        String str = "nil";
+        var str = "nil";
         if (value != null) {
           str = value.toString();
         }
