@@ -40,18 +40,8 @@ class Scanner {
       var token = scanToken();
       if (token == null) {
         if (line != startLine && !tokens.isEmpty()) {
-          switch (tokens.getLast().type()) {
-            case TokenType.IDENTIFIER,
-                  TokenType.NUMBER,
-                  TokenType.STRING,
-                  TokenType.NIL,
-                  TokenType.TRUE,
-                  TokenType.FALSE,
-                  TokenType.THIS,
-                  TokenType.RETURN,
-                  TokenType.RIGHT_PAREN
-                  -> tokens.add(createToken(TokenType.SEMICOLON));
-            default -> {}
+          if (insertSemicolon(tokens.getLast().type())) {
+            tokens.add(createToken(TokenType.SEMICOLON));
           }
         }
 
@@ -59,6 +49,12 @@ class Scanner {
       }
 
       tokens.add(token);
+    }
+
+    if (!tokens.isEmpty()) {
+      if (insertSemicolon(tokens.getLast().type())) {
+        tokens.add(createToken(TokenType.SEMICOLON));
+      }
     }
 
     tokens.add(new Token(TokenType.EOF, "", null, line));
@@ -224,5 +220,21 @@ class Scanner {
   private Token createToken(TokenType type, Object literal) {
     var text = source.substring(start, current);
     return new Token(type, text, literal, line);
+  }
+
+  private boolean insertSemicolon(TokenType type) {
+    return switch (type) {
+      case TokenType.IDENTIFIER,
+            TokenType.NUMBER,
+            TokenType.STRING,
+            TokenType.NIL,
+            TokenType.TRUE,
+            TokenType.FALSE,
+            TokenType.THIS,
+            TokenType.RETURN,
+            TokenType.RIGHT_PAREN
+            -> true;
+      default -> false;
+    };
   }
 }
