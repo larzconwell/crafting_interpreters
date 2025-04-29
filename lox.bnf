@@ -28,7 +28,7 @@ logical_and ::= equality ( whitespace* "and" whitespace* equality )*
 equality ::= comparison ( whitespace* ( "==" | "!=" ) whitespace* comparison )*
 comparison ::= term ( whitespace* ( "<" | ">" | "<=" | ">=" ) whitespace* term )*
 term ::= factor ( whitespace* ( "+" | "-" ) whitespace* factor )*
-factor ::= unary ( whitespace* ( "*" | "/" ) whitespace* unary )*
+factor ::= unary ( whitespace* ( "*" | "/" | "%" ) whitespace* unary )*
 unary ::= ( ( "-" | "!" ) whitespace* unary ) | call
 
 call ::= primary ( ( whitespace* "(" whitespace* call_arguments? whitespace* ")" ) | ( whitespace* "." whitespace* identifier ) )*

@@ -292,7 +292,7 @@ class Parser {
   }
 
   private Expr factor() {
-    return binaryExpr(() -> unary(), TokenType.STAR, TokenType.SLASH);
+    return binaryExpr(() -> unary(), TokenType.STAR, TokenType.SLASH, TokenType.PERCENT);
   }
 
   private Expr unary() {

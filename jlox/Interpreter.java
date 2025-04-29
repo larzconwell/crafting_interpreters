@@ -232,6 +232,11 @@ class Interpreter {
         checkNotDivideByZero(expr.operator(), right);
         yield (double)left / (double)right;
       }
+      case TokenType.PERCENT -> {
+        checkNumberOperands(expr.operator(), left, right);
+        checkNotDivideByZero(expr.operator(), right);
+        yield (double)left % (double)right;
+      }
       case TokenType.GREATER -> {
         checkNumberOperands(expr.operator(), left, right);
         yield (double)left > (double)right;

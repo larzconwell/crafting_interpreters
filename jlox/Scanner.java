@@ -75,6 +75,7 @@ class Scanner {
       case '+' -> createToken(TokenType.PLUS);
       case '-' -> createToken(TokenType.MINUS);
       case '*' -> createToken(TokenType.STAR);
+      case '%' -> createToken(TokenType.PERCENT);
       case '/' -> {
         if (match('/')) {
           while (peek() != '\n' && !isAtEnd()) {
