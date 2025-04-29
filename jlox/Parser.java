@@ -217,8 +217,7 @@ class Parser {
     expect = TokenType.RIGHT_PAREN;
     consume(expect, String.format("Expect '%s' after 'for' increment.", expect));
 
-    Stmt stmt = statement();
-
+    var stmt = statement();
     if (increment != null) {
       stmt = new Stmt.Block(List.of(
         stmt,

@@ -25,4 +25,5 @@ var klass = Logger
 write(klass, "hello") // logger: hello
 
 var instance = Logger()
-instance.write("first").write("second")
+instance.write("first").write("second") // logger: first
+                                        // logger: second

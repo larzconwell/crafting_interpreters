@@ -238,7 +238,7 @@ class Resolver {
         // How many scopes away from the expression we found the declaration
         // e.g. in the same scope then 0, in the parent scope then 1
         interpreter.resolve(expr, scopes.size() - 1 - i);
-        break;
+        return;
       }
     }
   }
