@@ -3,6 +3,11 @@ import java.util.Stack;
 import java.util.Map;
 import java.util.HashMap;
 
+enum LoopType {
+  NONE,
+  WHILE,
+}
+
 enum FunctionType {
   NONE,
   FUNCTION,
@@ -23,6 +28,7 @@ enum ClassType {
 class Resolver {
   private final Interpreter interpreter;
   private final Stack<Map<String, Boolean>> scopes = new Stack<>();
+  private LoopType currentLoop = LoopType.NONE;
   private FunctionType currentFunction = FunctionType.NONE;
   private ClassType currentClass = ClassType.NONE;
 
@@ -45,6 +51,7 @@ class Resolver {
       case Stmt.While whileStmt -> resolveWhile(whileStmt);
       case Stmt.Function func -> resolveFunction(func);
       case Stmt.Return returnStmt -> resolveReturn(returnStmt);
+      case Stmt.Break breakStmt -> resolveBreak(breakStmt);
       case Stmt.Class classStmt -> resolveClass(classStmt);
       default -> {}
     };
@@ -94,7 +101,13 @@ class Resolver {
 
   private void resolveWhile(Stmt.While stmt) {
     resolve(stmt.condition());
+
+    var enclosingLoop = currentLoop;
+    currentLoop = LoopType.WHILE;
+
     resolve(stmt.stmt());
+
+    currentLoop = enclosingLoop;
   }
 
   private void resolveFunction(Stmt.Function stmt) {
@@ -107,7 +120,7 @@ class Resolver {
 
   private void resolveReturn(Stmt.Return stmt) {
     if (currentFunction == FunctionType.NONE) {
-      Lox.error(stmt.keyword(), "Can't return outside of a function.");
+      Lox.error(stmt.keyword(), "Can't return outside of a function body.");
     }
 
     if (stmt.expr() != null) {
@@ -116,6 +129,12 @@ class Resolver {
       }
 
       resolve(stmt.expr());
+    }
+  }
+
+  private void resolveBreak(Stmt.Break stmt) {
+    if (currentLoop == LoopType.NONE) {
+      Lox.error(stmt.keyword(), "Can't break outside of a loop body.");
     }
   }
 

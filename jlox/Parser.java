@@ -119,6 +119,10 @@ class Parser {
       return returnStatement();
     }
 
+    if (match(TokenType.BREAK)) {
+      return breakStatement();
+    }
+
     if (match(TokenType.LEFT_BRACE)) {
       return blockStatement();
     }
@@ -150,6 +154,15 @@ class Parser {
     consume(expect, String.format("Expect '%s' after return.", expect));
 
     return new Stmt.Return(keyword, expr);
+  }
+
+  private Stmt.Break breakStatement() {
+    var keyword = previous();
+
+    var expect = TokenType.SEMICOLON;
+    consume(expect, String.format("Expect '%s' after break.", expect));
+
+    return new Stmt.Break(keyword);
   }
 
   private Stmt.Block blockStatement() {

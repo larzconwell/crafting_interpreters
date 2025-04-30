@@ -6,8 +6,12 @@ if (boolVar) {
 }
 
 var counter = 1
-while (counter < 10) {
+while (counter < 20) {
 	print(counter)
+	if (counter == 10) {
+		break
+	}
+
 	counter = counter + 1
 }
 
@@ -16,4 +20,3 @@ for (var counter = 1; counter < 10; counter = counter + 1) {
 		print(counter)
 	}
 }
-

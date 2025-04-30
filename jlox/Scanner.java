@@ -15,6 +15,7 @@ class Scanner {
     Map.entry("while", TokenType.WHILE),
     Map.entry("fun", TokenType.FUN),
     Map.entry("return", TokenType.RETURN),
+    Map.entry("break", TokenType.BREAK),
     Map.entry("var", TokenType.VAR),
     Map.entry("class", TokenType.CLASS),
     Map.entry("super", TokenType.SUPER),
@@ -233,6 +234,7 @@ class Scanner {
             TokenType.FALSE,
             TokenType.THIS,
             TokenType.RETURN,
+            TokenType.BREAK,
             TokenType.RIGHT_PAREN
             -> true;
       default -> false;
