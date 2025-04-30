@@ -7,9 +7,15 @@ if (boolVar) {
 
 var counter = 1
 while (counter < 20) {
-	print(counter)
-	if (counter == 10) {
+	if (counter >= 10) {
 		break
+	}
+
+	print(counter)
+
+	if (counter % 2 != 0) {
+		counter = counter + 2
+		continue
 	}
 
 	counter = counter + 1

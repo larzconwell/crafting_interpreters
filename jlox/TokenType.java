@@ -40,6 +40,7 @@ enum TokenType {
   FUN("fun"),
   RETURN("return"),
   BREAK("break"),
+  CONTINUE("continue"),
   VAR("var"),
 
   CLASS("class"),

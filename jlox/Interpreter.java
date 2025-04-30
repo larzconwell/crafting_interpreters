@@ -79,6 +79,7 @@ class Interpreter {
       case Stmt.Function func -> execFunction(func);
       case Stmt.Return returnStmt -> execReturn(returnStmt);
       case Stmt.Break breakStmt -> execBreak(breakStmt);
+      case Stmt.Continue continueStmt -> execContinue(continueStmt);
       case Stmt.Class classStmt -> execClass(classStmt);
       default -> {}
     };
@@ -131,8 +132,10 @@ class Interpreter {
     while (isTruthy(evaluate(stmt.condition()))) {
       try {
         execute(stmt.stmt());
-      } catch (Break brk) {
+      } catch (Break _) {
         break;
+      } catch (Continue _) {
+        continue;
       }
     }
   }
@@ -152,6 +155,10 @@ class Interpreter {
 
   private void execBreak(Stmt.Break stmt) {
     throw new Break();
+  }
+
+  private void execContinue(Stmt.Continue stmt) {
+    throw new Continue();
   }
 
   private void execClass(Stmt.Class stmt) {

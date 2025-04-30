@@ -16,6 +16,7 @@ class Scanner {
     Map.entry("fun", TokenType.FUN),
     Map.entry("return", TokenType.RETURN),
     Map.entry("break", TokenType.BREAK),
+    Map.entry("continue", TokenType.CONTINUE),
     Map.entry("var", TokenType.VAR),
     Map.entry("class", TokenType.CLASS),
     Map.entry("super", TokenType.SUPER),
@@ -235,6 +236,7 @@ class Scanner {
             TokenType.THIS,
             TokenType.RETURN,
             TokenType.BREAK,
+            TokenType.CONTINUE,
             TokenType.RIGHT_PAREN
             -> true;
       default -> false;

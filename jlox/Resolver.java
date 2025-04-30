@@ -52,6 +52,7 @@ class Resolver {
       case Stmt.Function func -> resolveFunction(func);
       case Stmt.Return returnStmt -> resolveReturn(returnStmt);
       case Stmt.Break breakStmt -> resolveBreak(breakStmt);
+      case Stmt.Continue continueStmt -> resolveContinue(continueStmt);
       case Stmt.Class classStmt -> resolveClass(classStmt);
       default -> {}
     };
@@ -135,6 +136,12 @@ class Resolver {
   private void resolveBreak(Stmt.Break stmt) {
     if (currentLoop == LoopType.NONE) {
       Lox.error(stmt.keyword(), "Can't break outside of a loop body.");
+    }
+  }
+
+  private void resolveContinue(Stmt.Continue stmt) {
+    if (currentLoop == LoopType.NONE) {
+      Lox.error(stmt.keyword(), "Can't continue outside of a loop body.");
     }
   }
 

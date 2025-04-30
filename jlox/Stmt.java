@@ -9,5 +9,6 @@ interface Stmt {
   record Function(Token identifier, List<Token> params, List<Stmt> stmts) implements Stmt {}
   record Return(Token keyword, Expr expr) implements Stmt {}
   record Break(Token keyword) implements Stmt {}
+  record Continue(Token keyword) implements Stmt {}
   record Class(Token identifier, Expr.Var superclass, List<Stmt.Function> methods) implements Stmt {}
 }
