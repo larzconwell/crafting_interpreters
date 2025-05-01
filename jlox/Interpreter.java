@@ -76,6 +76,7 @@ class Interpreter {
       case Stmt.Block block -> execBlock(block);
       case Stmt.If ifStmt -> execIf(ifStmt);
       case Stmt.While whileStmt  -> execWhile(whileStmt);
+      case Stmt.For forStmt -> execFor(forStmt);
       case Stmt.Function func -> execFunction(func);
       case Stmt.Return returnStmt -> execReturn(returnStmt);
       case Stmt.Break breakStmt -> execBreak(breakStmt);
@@ -135,6 +136,30 @@ class Interpreter {
       } catch (Break _) {
         break;
       } catch (Continue _) {
+        continue;
+      }
+    }
+  }
+
+  private void execFor(Stmt.For stmt) {
+    if (stmt.initializer() != null) {
+      execute(stmt.initializer());
+    }
+
+    while (isTruthy(evaluate(stmt.condition()))) {
+      try {
+        execute(stmt.stmt());
+
+        if (stmt.increment() != null) {
+          evaluate(stmt.increment());
+        }
+      } catch (Break _) {
+        break;
+      } catch (Continue _) {
+        if (stmt.increment() != null) {
+          evaluate(stmt.increment());
+        }
+
         continue;
       }
     }

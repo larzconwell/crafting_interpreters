@@ -244,23 +244,7 @@ class Parser {
     consume(expect, String.format("Expect '%s' after 'for' increment.", expect));
 
     var stmt = statement();
-    if (increment != null) {
-      stmt = new Stmt.Block(List.of(
-        stmt,
-        new Stmt.ExprStmt(increment)
-      ));
-    }
-
-    stmt = new Stmt.While(condition, stmt);
-
-    if (initializer != null) {
-      stmt = new Stmt.Block(List.of(
-        initializer,
-        stmt
-      ));
-    }
-
-    return stmt;
+    return new Stmt.For(initializer, condition, increment, stmt);
   }
 
   private Stmt.ExprStmt expressionStatement() {

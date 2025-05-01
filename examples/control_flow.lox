@@ -22,7 +22,9 @@ while (counter < 20) {
 }
 
 for (var counter = 1; counter < 10; counter = counter + 1) {
-	if (counter % 2 == 0) {
-		print(counter)
+	if (counter % 2 != 0) {
+		continue
 	}
+
+	print(counter)
 }

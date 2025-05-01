@@ -6,6 +6,7 @@ import java.util.HashMap;
 enum LoopType {
   NONE,
   WHILE,
+  FOR,
 }
 
 enum FunctionType {
@@ -49,6 +50,7 @@ class Resolver {
       case Stmt.Block block -> resolveBlock(block);
       case Stmt.If ifStmt -> resolveIf(ifStmt);
       case Stmt.While whileStmt -> resolveWhile(whileStmt);
+      case Stmt.For forStmt -> resolveFor(forStmt);
       case Stmt.Function func -> resolveFunction(func);
       case Stmt.Return returnStmt -> resolveReturn(returnStmt);
       case Stmt.Break breakStmt -> resolveBreak(breakStmt);
@@ -101,13 +103,33 @@ class Resolver {
   }
 
   private void resolveWhile(Stmt.While stmt) {
-    resolve(stmt.condition());
-
     var enclosingLoop = currentLoop;
     currentLoop = LoopType.WHILE;
 
+    resolve(stmt.condition());
     resolve(stmt.stmt());
 
+    currentLoop = enclosingLoop;
+  }
+
+  private void resolveFor(Stmt.For stmt) {
+    var enclosingLoop = currentLoop;
+    currentLoop = LoopType.FOR;
+    beginScope();
+
+    if (stmt.initializer() != null) {
+      resolve(stmt.initializer());
+    }
+
+    resolve(stmt.condition());
+
+    if (stmt.increment() != null) {
+      resolve(stmt.increment());
+    }
+
+    resolve(stmt.stmt());
+
+    endScope();
     currentLoop = enclosingLoop;
   }
 
