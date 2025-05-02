@@ -1,0 +1,7 @@
+(lang dune 3.18)
+
+(name camlox)
+
+(package
+ (name camlox)
+ (depends ocaml))
